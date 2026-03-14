@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ challenge.name }} - CTF Challenge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚩 {{ challenge.name }}</h1>
+            <div class="challenge-meta">
+                <span class="badge category">{{ challenge.category }}</span>
+                <span class="badge difficulty">{{ challenge.difficulty }}</span>
+                <span class="badge points" id="current-points">{{ session.points }} points</span>
+            </div>
+        </header>
+
+        {% if session.solved %}
+        <div class="alert success">
+            <strong>✅ Solved!</strong> You've successfully completed this challenge!
+        </div>
+        {% endif %}
+
+        <section class="challenge-description">
+            <h2>Challenge Description</h2>
+            <p>{{ challenge.description | safe }}</p>
+        </section>
+
+        <section class="download-section">
+            <h2>Download Challenge</h2>
+            <a href="/download" class="btn btn-primary" download>
+                📥 Download challenge.png
+            </a>
+            <p class="file-info">File: challenge.png | Size: ~1-2 MB</p>
+        </section>
+
+        <section class="submit-section">
+            <h2>Submit Flag</h2>
+            <div class="form-group">
+                <input type="text" 
+                       id="username" 
+                       placeholder="Your username (optional)" 
+                       value="{{ session.username or '' }}"
+                       {% if session.solved %}disabled{% endif %}>
+            </div>
+            <div class="form-group">
+                <input type="text" 
+                       id="flag-input" 
+                       placeholder="FLAG{...}" 
+                       {% if session.solved %}disabled{% endif %}>
+                <button onclick="submitFlag()" 
+                        class="btn btn-success"
+                        {% if session.solved %}disabled{% endif %}>
+                    Submit Flag
+                </button>
+            </div>
+            <div id="submit-message"></div>
+        </section>
+
+        <section class="hints-section">
+            <h2>Hints</h2>
+            <div class="hints-container">
+                {% for hint in challenge.hints %}
+                <div class="hint-card">
+                    <div class="hint-header">
+                        <strong>Hint {{ hint.id }}</strong>
+                        <span class="hint-cost">-{{ hint.cost }} points</span>
+                    </div>
+                    {% if hint.id in session.unlocked_hints %}
+                    <div class="hint-content unlocked">
+                        {{ hint.text }}
+                    </div>
+                    {% else %}
+                    <button onclick="unlockHint({{ hint.id }})" 
+                            class="btn btn-hint"
+                            {% if session.solved %}disabled{% endif %}>
+                        🔓 Unlock Hint
+                    </button>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="tools-section">
+            <h2>Recommended Tools</h2>
+            <ul class="tools-list">
+                <li><code>file</code> - File type identification</li>
+                <li><code>exiftool</code> - Metadata extraction</li>
+                <li><code>strings</code> - String extraction</li>
+                <li><code>binwalk</code> - Forensic extraction</li>
+                <li><code>steghide</code> - Steganography extraction</li>
+                <li><code>unzip</code> - Archive extraction</li>
+                <li><code>python3</code> - Scripting and decoding</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>Hard-Level Steganography CTF Challenge</p>
+            <button onclick="showStats()" class="btn btn-small">📊 Show Stats</button>
+        </footer>
+    </div>
+
+    <script>
+        async function submitFlag() {
+            const flagInput = document.getElementById('flag-input');
+            const usernameInput = document.getElementById('username');
+            const messageDiv = document.getElementById('submit-message');
+            const flag = flagInput.value.trim();
+            const username = usernameInput.value.trim() || 'Anonymous';
+
+            if (!flag) {
+                showMessage('Please enter a flag', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({flag, username})
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    document.getElementById('current-points').textContent = data.points + ' points';
+                    
+                    if (data.message.includes('Correct')) {
+                        setTimeout(() => location.reload(), 2000);
+                    }
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error submitting flag', 'error');
+            }
+        }
+
+        async function unlockHint(hintId) {
+            try {
+                const response = await fetch(`/hint/${hintId}`, {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    document.getElementById('current-points').textContent = data.points + ' points';
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error unlocking hint', 'error');
+            }
+        }
+
+        async function showStats() {
+            try {
+                const response = await fetch('/stats');
+                const data = await response.json();
+                alert(`Statistics:\n\nTotal Attempts: ${data.total_attempts}\nTotal Solves: ${data.total_solves}\nSolve Rate: ${data.solve_rate}`);
+            } catch (error) {
+                alert('Error loading statistics');
+            }
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('submit-message');
+            messageDiv.className = `alert ${type}`;
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('flag-input')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') submitFlag();
+        });
+    </script>
+</body>
+</html>
