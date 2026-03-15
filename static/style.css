@@ -10,11 +10,14 @@ body {
     min-height: 100vh;
     padding: 20px;
     color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .container {
-    max-width: 900px;
-    margin: 0 auto;
+    max-width: 800px;
+    width: 100%;
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.2);
@@ -30,94 +33,33 @@ header {
 
 header h1 {
     font-size: 2.5em;
-    margin-bottom: 15px;
+    margin: 0;
 }
 
-.challenge-meta {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
+.image-section {
+    padding: 40px;
+    text-align: center;
+    background: #f8f9fa;
 }
 
-.badge {
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    font-weight: 600;
-}
-
-.badge.category {
-    background: rgba(255,255,255,0.2);
-}
-
-.badge.difficulty {
-    background: #ff6b6b;
-}
-
-.badge.points {
-    background: #51cf66;
-}
-
-section {
-    padding: 30px 40px;
-    border-bottom: 1px solid #eee;
-}
-
-section:last-of-type {
-    border-bottom: none;
-}
-
-h2 {
-    color: #667eea;
-    margin-bottom: 20px;
-    font-size: 1.8em;
-}
-
-.challenge-description p {
-    line-height: 1.8;
-    color: #555;
-    white-space: pre-line;
+.challenge-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 3px solid #667eea;
 }
 
 .download-section {
+    padding: 40px;
     text-align: center;
 }
 
-.file-info {
-    margin-top: 15px;
-    color: #888;
-    font-size: 0.9em;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-input[type="text"] {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #ddd;
-    border-radius: 6px;
-    font-size: 1em;
-    transition: border-color 0.3s;
-}
-
-input[type="text"]:focus {
-    outline: none;
-    border-color: #667eea;
-}
-
-input[type="text"]:disabled {
-    background: #f5f5f5;
-    cursor: not-allowed;
-}
-
 .btn {
-    padding: 12px 30px;
+    padding: 15px 40px;
     border: none;
-    border-radius: 6px;
-    font-size: 1em;
+    border-radius: 8px;
+    font-size: 1.1em;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
@@ -125,132 +67,15 @@ input[type="text"]:disabled {
     display: inline-block;
 }
 
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
 .btn-primary {
     background: #667eea;
     color: white;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primary:hover {
     background: #5568d3;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-}
-
-.btn-success {
-    background: #51cf66;
-    color: white;
-    margin-left: 10px;
-}
-
-.btn-success:hover:not(:disabled) {
-    background: #40c057;
-}
-
-.btn-hint {
-    background: #ffd43b;
-    color: #333;
-    width: 100%;
-}
-
-.btn-hint:hover:not(:disabled) {
-    background: #fcc419;
-}
-
-.btn-small {
-    padding: 8px 16px;
-    font-size: 0.9em;
-    background: #868e96;
-    color: white;
-}
-
-.btn-small:hover {
-    background: #495057;
-}
-
-.alert {
-    padding: 15px 20px;
-    border-radius: 6px;
-    margin-top: 15px;
-    display: none;
-}
-
-.alert.success {
-    background: #d3f9d8;
-    color: #2b8a3e;
-    border: 1px solid #8ce99a;
-    display: block;
-}
-
-.alert.error {
-    background: #ffe3e3;
-    color: #c92a2a;
-    border: 1px solid #ffa8a8;
-}
-
-.hints-container {
-    display: grid;
-    gap: 20px;
-}
-
-.hint-card {
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    padding: 20px;
-    background: #f8f9fa;
-}
-
-.hint-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.hint-cost {
-    color: #ff6b6b;
-    font-weight: 600;
-}
-
-.hint-content {
-    padding: 15px;
-    background: white;
-    border-radius: 6px;
-    border-left: 4px solid #51cf66;
-}
-
-.tools-list {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
-}
-
-.tools-list li {
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    border-left: 3px solid #667eea;
-}
-
-.tools-list code {
-    font-weight: 600;
-    color: #667eea;
-}
-
-footer {
-    background: #f8f9fa;
-    padding: 30px 40px;
-    text-align: center;
-    color: #868e96;
-}
-
-footer p {
-    margin-bottom: 15px;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
 }
 
 @media (max-width: 768px) {
@@ -266,17 +91,16 @@ footer p {
         font-size: 1.8em;
     }
 
-    section {
+    .image-section {
         padding: 20px;
     }
 
-    .btn-success {
-        margin-left: 0;
-        margin-top: 10px;
-        width: 100%;
+    .download-section {
+        padding: 30px 20px;
     }
 
-    .tools-list {
-        grid-template-columns: 1fr;
+    .btn {
+        padding: 12px 30px;
+        font-size: 1em;
     }
 }
